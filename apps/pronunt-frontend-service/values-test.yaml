@@ -3,7 +3,9 @@ image:
 
 
 namespace:
-  name: pronunt-app-test-nshttpRoute:
+  name: pronunt-app-test-ns
+
+httpRoute:
   enabled: true
   hostnames:
     - pronunt.com
@@ -11,3 +13,4 @@ namespace:
     - name: pronunt-gateway
       namespace: pronunt-gateway-ns
   pathPrefix: /
+
