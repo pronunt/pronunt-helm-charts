@@ -1,0 +1,61 @@
+fullnameOverride: pronunt-worker-service
+
+namespace:
+  create: false
+  name: pronunt-app-ns
+
+image:
+  repository: ghcr.io/pronunt/pronunt-worker-service
+  tag: latest
+  pullPolicy: IfNotPresent
+
+containerPort: 8000
+
+service:
+  enabled: true
+  type: ClusterIP
+  port: 8000
+  targetPort: 8000
+
+ingress:
+  enabled: true
+  className: ""
+  annotations: {}
+  hosts: []
+  tls: []
+
+resources:
+  requests:
+    cpu: 100m
+    memory: 128Mi
+  limits:
+    cpu: 300m
+    memory: 256Mi
+
+autoscaling:
+  enabled: true
+  minReplicas: 1
+  maxReplicas: 3
+  targetCPUUtilizationPercentage: 80
+
+env:
+  config:
+    APP_NAME: pronunt-worker-service
+    APP_ENV: production
+    APP_HOST: 0.0.0.0
+    APP_PORT: "8000"
+    LOG_LEVEL: INFO
+    RABBITMQ_URL: amqp://guest:guest@rabbitmq:5672/
+    AGGREGATOR_SERVICE_URL: http://pronunt-aggregator-service:8000
+  secret:
+    WORKER_AUTH_TOKEN: change-me
+
+
+httpRoute:
+  enabled: true
+  hostnames:
+    - pronunt.com
+  parentRefs:
+    - name: pronunt-gateway
+      namespace: pronunt-gateway-ns
+  pathPrefix: /api/v1/worker

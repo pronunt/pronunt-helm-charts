@@ -1,0 +1,27 @@
+image:
+  tag: prod
+
+resources:
+  requests:
+    cpu: 500m
+    memory: 512Mi
+  limits:
+    cpu: 1000m
+    memory: 1Gi
+
+autoscaling:
+  enabled: true
+  minReplicas: 1
+  maxReplicas: 4
+  targetCPUUtilizationPercentage: 70
+
+
+namespace:
+  name: pronunt-app-nshttpRoute:
+  enabled: true
+  hostnames:
+    - pronunt.com
+  parentRefs:
+    - name: pronunt-gateway
+      namespace: pronunt-gateway-ns
+  pathPrefix: /api/v1/ai

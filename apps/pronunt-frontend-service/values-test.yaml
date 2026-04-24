@@ -1,0 +1,13 @@
+image:
+  tag: test
+
+
+namespace:
+  name: pronunt-app-test-nshttpRoute:
+  enabled: true
+  hostnames:
+    - pronunt.com
+  parentRefs:
+    - name: pronunt-gateway
+      namespace: pronunt-gateway-ns
+  pathPrefix: /

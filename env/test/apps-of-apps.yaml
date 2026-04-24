@@ -1,0 +1,20 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: pronunt-test-apps
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/pronunt/pronunt-helm-charts.git
+    targetRevision: test
+    path: env/test/apps
+    directory:
+      recurse: true
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: argocd
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
