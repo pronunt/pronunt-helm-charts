@@ -17,7 +17,9 @@ autoscaling:
 
 
 namespace:
-  name: pronunt-app-nshttpRoute:
+  name: pronunt-app-ns
+
+httpRoute:
   enabled: true
   hostnames:
     - pronunt.com
@@ -25,3 +27,4 @@ namespace:
     - name: pronunt-gateway
       namespace: pronunt-gateway-ns
   pathPrefix: /api/v1/ai
+
