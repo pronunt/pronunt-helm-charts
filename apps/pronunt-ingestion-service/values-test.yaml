@@ -10,6 +10,7 @@ resources:
 env:
   config:
     APP_ENV: test
+    RABBITMQ_URL: amqp://pronuntuser:pronuntpassword@pronunt-rabbitmq:5672/
 namespace:
   name: pronunt-app-test-ns
 httpRoute:
