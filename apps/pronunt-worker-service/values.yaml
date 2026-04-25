@@ -108,7 +108,7 @@ env:
     AGGREGATOR_SERVICE_URL: http://pronunt-aggregator-service:8000
     WORKER_CONSUMER_ENABLED: "true"
     AUTH_ENABLED: "false"
-    ALLOW_UNSAFE_DEV_AUTH: "true"
+    ALLOW_UNSAFE_DEV_AUTH: "false"
   secret:
     WORKER_AUTH_TOKEN: change-me
 

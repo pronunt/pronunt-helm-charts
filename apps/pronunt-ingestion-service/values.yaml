@@ -108,7 +108,7 @@ env:
     RABBITMQ_PR_ROUTING_KEY: pull_request.normalized
     RABBITMQ_PR_QUEUE: pronunt.pull_requests.normalized
     AUTH_ENABLED: "false"
-    ALLOW_UNSAFE_DEV_AUTH: "true"
+    ALLOW_UNSAFE_DEV_AUTH: "false"
   secret:
     INTERNAL_SERVICE_TOKEN: change-me
 

@@ -107,7 +107,7 @@ env:
     CONFIG_SERVICE_URL: http://pronunt-config-service:8000
     AI_SERVICE_URL: http://pronunt-ai-service:8000
     AUTH_ENABLED: "false"
-    ALLOW_UNSAFE_DEV_AUTH: "true"
+    ALLOW_UNSAFE_DEV_AUTH: "false"
   secret:
     MONGODB_URI: <set-mongodb-uri-via-sealed-secret>
     AGGREGATOR_SIGNING_KEY: change-me

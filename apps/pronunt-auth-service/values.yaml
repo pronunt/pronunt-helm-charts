@@ -114,7 +114,7 @@ env:
     SESSION_JWT_ISSUER: pronunt-auth-service
     SESSION_TTL_SECONDS: "604800"
     AUTH_ENABLED: "false"
-    ALLOW_UNSAFE_DEV_AUTH: "true"
+    ALLOW_UNSAFE_DEV_AUTH: "false"
   secret:
     MONGODB_URI: <set-mongodb-uri-via-sealed-secret>
     GITHUB_OAUTH_CLIENT_SECRET: change-me

@@ -106,7 +106,7 @@ env:
     INHOUSE_MODEL: llama3.1:8b
     OPENAI_MODEL: gpt-5-mini
     AUTH_ENABLED: "false"
-    ALLOW_UNSAFE_DEV_AUTH: "true"
+    ALLOW_UNSAFE_DEV_AUTH: "false"
   secret:
     OPENAI_API_KEY: change-me
 
