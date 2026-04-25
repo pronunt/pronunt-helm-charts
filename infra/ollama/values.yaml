@@ -34,9 +34,13 @@ persistence:
 runtimeClassName: nvidia
 
 nodeSelector:
-  accelerator: nvidia-gpu
+  accelerator: nvidia
 
-tolerations: []
+tolerations:
+  - key: gpu
+    operator: Equal
+    value: "true"
+    effect: NoSchedule
 
 affinity:
   podAntiAffinity:

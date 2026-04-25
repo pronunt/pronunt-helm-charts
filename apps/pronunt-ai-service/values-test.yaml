@@ -1,7 +1,12 @@
 image:
   tag: dba6ba6
 nodeSelector:
-  accelerator: nvidia-gpu
+  accelerator: nvidia
+tolerations:
+  - key: gpu
+    operator: Equal
+    value: "true"
+    effect: NoSchedule
 env:
   config:
     APP_ENV: test
