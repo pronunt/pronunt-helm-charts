@@ -1,18 +1,13 @@
 image:
-  tag: test
-
+  tag: dba6ba6
 nodeSelector:
   accelerator: nvidia-gpu
-
 env:
   config:
     APP_ENV: test
     INHOUSE_BASE_URL: http://pronunt-ollama.pronunt-ai-infra-test-ns.svc.cluster.local:11434
-
-
 namespace:
   name: pronunt-app-test-ns
-
 httpRoute:
   enabled: true
   hostnames:
@@ -21,4 +16,3 @@ httpRoute:
     - name: pronunt-gateway-test
       namespace: pronunt-gateway-test-ns
   pathPrefix: /api/v1/ai
-
