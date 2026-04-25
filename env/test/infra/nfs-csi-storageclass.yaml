@@ -2,9 +2,9 @@ apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
   name: pronunt-nfs-csi-storageclass-test
-  namespace: argocd
+  namespace: argocd-ns
 spec:
-  project: default
+  project: pronunt
   source:
     repoURL: https://github.com/pronunt/pronunt-helm-charts.git
     targetRevision: test
@@ -15,7 +15,7 @@ spec:
         - values-test.yaml
   destination:
     server: https://kubernetes.default.svc
-    namespace: argocd
+    namespace: argocd-ns
   syncPolicy:
     automated:
       prune: true
