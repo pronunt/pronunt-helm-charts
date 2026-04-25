@@ -1,0 +1,19 @@
+apiVersion: gateway.networking.k8s.io/v1
+kind: Gateway
+metadata:
+  name: {{ .Values.gateway.name }}
+  namespace: {{ .Values.gateway.namespace }}
+spec:
+  gatewayClassName: {{ .Values.gateway.gatewayClassName }}
+  listeners:
+{{ toYaml .Values.gateway.listeners | indent 4 }}
+---
+apiVersion: gateway.networking.k8s.io/v1
+kind: Gateway
+metadata:
+  name: {{ .Values.testGateway.name }}
+  namespace: {{ .Values.testGateway.namespace }}
+spec:
+  gatewayClassName: {{ .Values.testGateway.gatewayClassName }}
+  listeners:
+{{ toYaml .Values.testGateway.listeners | indent 4 }}

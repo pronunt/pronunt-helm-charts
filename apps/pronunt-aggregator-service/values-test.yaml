@@ -14,7 +14,7 @@ httpRoute:
   hostnames:
     - pronunt.com
   parentRefs:
-    - name: pronunt-gateway
-      namespace: pronunt-gateway-ns
+    - name: pronunt-gateway-test
+      namespace: pronunt-gateway-test-ns
   pathPrefix: /api/v1/aggregator
 

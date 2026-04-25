@@ -1,0 +1,6 @@
+apiVersion: v2
+name: pronunt-platform-core
+description: Core namespaces and gateway resources for Pronunt
+type: application
+version: 0.1.0
+appVersion: "1.0.0"

@@ -1,6 +1,9 @@
 image:
   tag: test
 
+nodeSelector:
+  accelerator: nvidia-gpu
+
 env:
   config:
     APP_ENV: test
@@ -15,7 +18,7 @@ httpRoute:
   hostnames:
     - pronunt.com
   parentRefs:
-    - name: pronunt-gateway
-      namespace: pronunt-gateway-ns
+    - name: pronunt-gateway-test
+      namespace: pronunt-gateway-test-ns
   pathPrefix: /api/v1/ai
 

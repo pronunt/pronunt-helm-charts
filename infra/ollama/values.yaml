@@ -1,7 +1,7 @@
 fullnameOverride: pronunt-ollama
 
 namespace:
-  create: true
+  create: false
   name: pronunt-ai-infra-ns
 
 image:
@@ -14,6 +14,11 @@ service:
   port: 11434
   targetPort: 11434
 
+serviceAccount:
+  create: true
+  name: ""
+  automountServiceAccountToken: false
+
 model:
   name: llama3.1:8b
   pullOnStartup: true
@@ -22,8 +27,8 @@ persistence:
   enabled: true
   size: 20Gi
   accessModes:
-    - ReadWriteOnce
-  storageClassName: ""
+    - ReadWriteMany
+  storageClassName: pronunt-nfs-csi
   mountPath: /root/.ollama
 
 runtimeClassName: nvidia
@@ -33,7 +38,33 @@ nodeSelector:
 
 tolerations: []
 
-affinity: {}
+affinity:
+  podAntiAffinity:
+    preferredDuringSchedulingIgnoredDuringExecution:
+      - weight: 100
+        podAffinityTerm:
+          topologyKey: kubernetes.io/hostname
+          labelSelector:
+            matchExpressions:
+              - key: app
+                operator: In
+                values:
+                  - pronunt-ollama
+
+podSecurityContext:
+  runAsNonRoot: true
+  runAsUser: 1000
+  runAsGroup: 1000
+  fsGroup: 1000
+  seccompProfile:
+    type: RuntimeDefault
+
+securityContext:
+  allowPrivilegeEscalation: false
+  capabilities:
+    drop:
+      - ALL
+  readOnlyRootFilesystem: false
 
 resources:
   requests:

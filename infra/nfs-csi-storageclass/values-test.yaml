@@ -1,0 +1,5 @@
+storageClass:
+  name: pronunt-nfs-csi
+  parameters:
+    server: <set-nfs-server-for-test>
+    share: <set-nfs-share-for-test>

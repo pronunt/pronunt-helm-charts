@@ -1,5 +1,7 @@
 fullnameOverride: pronunt-aggregator-service
 
+replicaCount: 1
+
 namespace:
   create: false
   name: pronunt-app-ns
@@ -11,36 +13,83 @@ image:
 
 containerPort: 8000
 
+serviceAccount:
+  create: true
+  name: ""
+  automountServiceAccountToken: false
+
+secretTemplate:
+  enabled: false
+
 service:
   enabled: true
   type: ClusterIP
   port: 8000
   targetPort: 8000
 
-ingress:
-  enabled: false
-  className: ""
-  annotations: {}
-  hosts:
-    - host: pronunt-aggregator-service.local
-      paths:
-        - path: /
-          pathType: Prefix
-  tls: []
-
 resources:
   requests:
-    cpu: 100m
-    memory: 128Mi
-  limits:
-    cpu: 300m
+    cpu: 200m
     memory: 256Mi
+  limits:
+    cpu: 500m
+    memory: 512Mi
 
 autoscaling:
   enabled: false
   minReplicas: 1
   maxReplicas: 4
   targetCPUUtilizationPercentage: 80
+  targetMemoryUtilizationPercentage: 80
+
+podAnnotations: {}
+podLabels: {}
+podSecurityContext:
+  runAsNonRoot: true
+  runAsUser: 10001
+  runAsGroup: 10001
+  fsGroup: 10001
+  seccompProfile:
+    type: RuntimeDefault
+securityContext:
+  allowPrivilegeEscalation: false
+  capabilities:
+    drop:
+      - ALL
+  readOnlyRootFilesystem: false
+nodeSelector: {}
+tolerations: []
+affinity:
+  podAntiAffinity:
+    preferredDuringSchedulingIgnoredDuringExecution:
+      - weight: 100
+        podAffinityTerm:
+          topologyKey: kubernetes.io/hostname
+          labelSelector:
+            matchExpressions:
+              - key: app
+                operator: In
+                values:
+                  - pronunt-aggregator-service
+
+startupProbe:
+  httpGet:
+    path: /api/v1/health/live
+    port: 8000
+  failureThreshold: 30
+  periodSeconds: 10
+readinessProbe:
+  httpGet:
+    path: /api/v1/health/ready
+    port: 8000
+  initialDelaySeconds: 5
+  periodSeconds: 10
+livenessProbe:
+  httpGet:
+    path: /api/v1/health/live
+    port: 8000
+  initialDelaySeconds: 15
+  periodSeconds: 20
 
 env:
   config:
@@ -49,11 +98,19 @@ env:
     APP_HOST: 0.0.0.0
     APP_PORT: "8000"
     LOG_LEVEL: INFO
+    LOG_USE_COLORS: "false"
+    REQUEST_ID_HEADER: X-Request-ID
+    HTTP_TIMEOUT_SECONDS: "10"
+    MONGODB_DATABASE: pronunt
+    MONGODB_PR_COLLECTION: aggregator_pull_requests
+    AGGREGATOR_STALE_AFTER_HOURS: "72"
     CONFIG_SERVICE_URL: http://pronunt-config-service:8000
     AI_SERVICE_URL: http://pronunt-ai-service:8000
+    AUTH_ENABLED: "false"
+    ALLOW_UNSAFE_DEV_AUTH: "true"
   secret:
+    MONGODB_URI: <set-mongodb-uri-via-sealed-secret>
     AGGREGATOR_SIGNING_KEY: change-me
-
 
 httpRoute:
   enabled: true

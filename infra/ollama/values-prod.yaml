@@ -3,6 +3,7 @@ namespace:
 
 persistence:
   size: 30Gi
+  storageClassName: pronunt-nfs-csi
 
 resources:
   requests:

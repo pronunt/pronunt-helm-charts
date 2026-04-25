@@ -1,0 +1,5 @@
+storageClass:
+  name: pronunt-nfs-csi
+  parameters:
+    server: <set-nfs-server-for-prod>
+    share: <set-nfs-share-for-prod>

@@ -1,0 +1,51 @@
+namespaces:
+  app:
+    name: pronunt-app-ns
+    labels:
+      pronunt-gateway: "true"
+  appTest:
+    name: pronunt-app-test-ns
+    labels:
+      pronunt-gateway: "true"
+  gateway:
+    name: pronunt-gateway-ns
+    labels: {}
+  gatewayTest:
+    name: pronunt-gateway-test-ns
+    labels: {}
+  aiInfra:
+    name: pronunt-ai-infra-ns
+    labels: {}
+  aiInfraTest:
+    name: pronunt-ai-infra-test-ns
+    labels: {}
+
+gateway:
+  name: pronunt-gateway
+  namespace: pronunt-gateway-ns
+  gatewayClassName: kgateway
+  listeners:
+    - name: http
+      protocol: HTTP
+      port: 80
+      allowedRoutes:
+        namespaces:
+          from: Selector
+          selector:
+            matchLabels:
+              pronunt-gateway: "true"
+
+testGateway:
+  name: pronunt-gateway-test
+  namespace: pronunt-gateway-test-ns
+  gatewayClassName: kgateway
+  listeners:
+    - name: http
+      protocol: HTTP
+      port: 80
+      allowedRoutes:
+        namespaces:
+          from: Selector
+          selector:
+            matchLabels:
+              pronunt-gateway: "true"
