@@ -1,0 +1,69 @@
+fullnameOverride: pronunt-ollama
+
+namespace:
+  create: true
+  name: pronunt-ai-infra-ns
+
+image:
+  repository: ollama/ollama
+  tag: "0.20.7"
+  pullPolicy: IfNotPresent
+
+service:
+  type: ClusterIP
+  port: 11434
+  targetPort: 11434
+
+model:
+  name: llama3.1:8b
+  pullOnStartup: true
+
+persistence:
+  enabled: true
+  size: 20Gi
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: ""
+  mountPath: /root/.ollama
+
+runtimeClassName: nvidia
+
+nodeSelector:
+  accelerator: nvidia-gpu
+
+tolerations: []
+
+affinity: {}
+
+resources:
+  requests:
+    cpu: "2"
+    memory: 8Gi
+    nvidia.com/gpu: "1"
+  limits:
+    cpu: "4"
+    memory: 16Gi
+    nvidia.com/gpu: "1"
+
+env:
+  OLLAMA_HOST: 0.0.0.0:11434
+  OLLAMA_KEEP_ALIVE: 30m
+
+startupProbe:
+  tcpSocket:
+    port: 11434
+  failureThreshold: 60
+  periodSeconds: 10
+
+readinessProbe:
+  httpGet:
+    path: /api/tags
+    port: 11434
+  initialDelaySeconds: 10
+  periodSeconds: 15
+
+livenessProbe:
+  tcpSocket:
+    port: 11434
+  initialDelaySeconds: 30
+  periodSeconds: 20

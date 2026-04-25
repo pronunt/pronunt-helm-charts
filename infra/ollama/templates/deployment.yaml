@@ -1,0 +1,73 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.fullnameOverride }}
+  namespace: {{ .Values.namespace.name }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: {{ .Values.fullnameOverride }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.fullnameOverride }}
+    spec:
+{{- if .Values.runtimeClassName }}
+      runtimeClassName: {{ .Values.runtimeClassName }}
+{{- end }}
+{{- if .Values.nodeSelector }}
+      nodeSelector:
+{{ toYaml .Values.nodeSelector | indent 8 }}
+{{- end }}
+{{- if .Values.tolerations }}
+      tolerations:
+{{ toYaml .Values.tolerations | indent 8 }}
+{{- end }}
+{{- if .Values.affinity }}
+      affinity:
+{{ toYaml .Values.affinity | indent 8 }}
+{{- end }}
+      containers:
+        - name: {{ .Values.fullnameOverride }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          command:
+            - /bin/sh
+            - -c
+            - |
+              ollama serve &
+              server_pid=$!
+              if [ "{{ .Values.model.pullOnStartup }}" = "true" ]; then
+                until ollama list >/dev/null 2>&1; do
+                  sleep 2
+                done
+                ollama pull {{ .Values.model.name }}
+              fi
+              wait "$server_pid"
+          ports:
+            - containerPort: {{ .Values.service.targetPort }}
+          env:
+{{- range $key, $value := .Values.env }}
+            - name: {{ $key }}
+              value: "{{ $value }}"
+{{- end }}
+          startupProbe:
+{{ toYaml .Values.startupProbe | indent 12 }}
+          readinessProbe:
+{{ toYaml .Values.readinessProbe | indent 12 }}
+          livenessProbe:
+{{ toYaml .Values.livenessProbe | indent 12 }}
+          resources:
+{{ toYaml .Values.resources | indent 12 }}
+{{- if .Values.persistence.enabled }}
+          volumeMounts:
+            - name: ollama-data
+              mountPath: {{ .Values.persistence.mountPath }}
+{{- end }}
+{{- if .Values.persistence.enabled }}
+      volumes:
+        - name: ollama-data
+          persistentVolumeClaim:
+            claimName: {{ .Values.fullnameOverride }}-data
+{{- end }}

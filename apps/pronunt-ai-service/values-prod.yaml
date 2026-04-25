@@ -19,6 +19,10 @@ autoscaling:
 namespace:
   name: pronunt-app-ns
 
+env:
+  config:
+    INHOUSE_BASE_URL: http://pronunt-ollama.pronunt-ai-infra-ns.svc.cluster.local:11434
+
 httpRoute:
   enabled: true
   hostnames:

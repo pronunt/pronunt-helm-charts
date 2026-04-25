@@ -1,0 +1,15 @@
+namespace:
+  name: pronunt-ai-infra-ns
+
+persistence:
+  size: 30Gi
+
+resources:
+  requests:
+    cpu: "2"
+    memory: 10Gi
+    nvidia.com/gpu: "1"
+  limits:
+    cpu: "4"
+    memory: 20Gi
+    nvidia.com/gpu: "1"

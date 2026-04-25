@@ -4,6 +4,7 @@ image:
 env:
   config:
     APP_ENV: test
+    INHOUSE_BASE_URL: http://pronunt-ollama.pronunt-ai-infra-test-ns.svc.cluster.local:11434
 
 
 namespace:
