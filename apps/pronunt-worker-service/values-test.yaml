@@ -1,14 +1,10 @@
 image:
-  tag: test
-
+  tag: c795955
 env:
   config:
     APP_ENV: test
-
-
 namespace:
   name: pronunt-app-test-ns
-
 httpRoute:
   enabled: true
   hostnames:
@@ -17,4 +13,3 @@ httpRoute:
     - name: pronunt-gateway-test
       namespace: pronunt-gateway-test-ns
   pathPrefix: /api/v1/worker
-
