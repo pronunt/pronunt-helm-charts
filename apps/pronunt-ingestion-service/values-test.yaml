@@ -1,5 +1,5 @@
 image:
-  tag: a42fe6a
+  tag: 05d763f
 resources:
   requests:
     cpu: 100m
