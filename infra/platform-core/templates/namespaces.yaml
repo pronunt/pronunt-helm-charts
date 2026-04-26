@@ -47,3 +47,21 @@ metadata:
   labels:
 {{ toYaml .Values.namespaces.aiInfraTest.labels | indent 4 }}
 {{- end }}
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: {{ .Values.namespaces.monitoring.name }}
+{{- if .Values.namespaces.monitoring.labels }}
+  labels:
+{{ toYaml .Values.namespaces.monitoring.labels | indent 4 }}
+{{- end }}
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: {{ .Values.namespaces.monitoringTest.name }}
+{{- if .Values.namespaces.monitoringTest.labels }}
+  labels:
+{{ toYaml .Values.namespaces.monitoringTest.labels | indent 4 }}
+{{- end }}

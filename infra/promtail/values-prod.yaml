@@ -1,0 +1,15 @@
+promtail:
+  config:
+    snippets:
+      extraRelabelConfigs:
+        - action: replace
+          replacement: pronunt
+          target_label: platform
+        - action: replace
+          replacement: pronunt-prod
+          target_label: environment
+        - action: replace
+          regex: (.+)
+          source_labels:
+            - app
+          target_label: service

@@ -1,0 +1,69 @@
+kube-prometheus-stack:
+  grafana:
+    enabled: true
+    adminUser: admin
+    adminPassword: admin
+    service:
+      type: ClusterIP
+    persistence:
+      enabled: true
+      type: pvc
+      storageClassName: pronunt-nfs-csi
+      accessModes:
+        - ReadWriteMany
+      size: 10Gi
+    sidecar:
+      dashboards:
+        enabled: true
+        label: grafana_dashboard
+        labelValue: "1"
+        searchNamespace: ALL
+      datasources:
+        enabled: true
+    additionalDataSources: []
+
+  prometheus:
+    prometheusSpec:
+      serviceMonitorSelectorNilUsesHelmValues: false
+      storageSpec:
+        volumeClaimTemplate:
+          spec:
+            storageClassName: pronunt-nfs-csi
+            accessModes:
+              - ReadWriteMany
+            resources:
+              requests:
+                storage: 30Gi
+
+  alertmanager:
+    enabled: true
+    alertmanagerSpec:
+      storage:
+        volumeClaimTemplate:
+          spec:
+            storageClassName: pronunt-nfs-csi
+            accessModes:
+              - ReadWriteMany
+            resources:
+              requests:
+                storage: 5Gi
+
+httpRoute:
+  enabled: true
+  name: pronunt-grafana-route
+  gateway:
+    name: replace-me
+    namespace: replace-me
+  hostname: grafana.pronunt.com
+  path:
+    type: PathPrefix
+    value: /
+  urlRewrite:
+    enabled: false
+    replacePrefixMatch: /
+  backend:
+    name: pronunt-monitoring-grafana
+    port: 80
+
+dashboards:
+  enabled: true

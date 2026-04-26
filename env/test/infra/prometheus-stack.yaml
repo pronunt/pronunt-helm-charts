@@ -1,0 +1,25 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: pronunt-prometheus-stack-test
+  namespace: argocd-ns
+spec:
+  project: pronunt
+  source:
+    repoURL: https://github.com/pronunt/pronunt-helm-charts.git
+    targetRevision: test
+    path: infra/prometheus-stack
+    helm:
+      releaseName: pronunt-monitoring
+      valueFiles:
+        - values.yaml
+        - values-test.yaml
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: pronunt-monitoring-test-ns
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=false
