@@ -104,10 +104,12 @@ env:
     MONGODB_DATABASE: pronunt
     MONGODB_SERVICE_COLLECTION: config_services
     MONGODB_DEPENDENCY_COLLECTION: config_dependencies
+    AUTH_SERVICE_URL: http://pronunt-auth-service:8000
     AUTH_ENABLED: "false"
     ALLOW_UNSAFE_DEV_AUTH: "false"
   secret:
     MONGODB_URI: <set-mongodb-uri-via-sealed-secret>
+    INTERNAL_SERVICE_TOKEN: change-me
 
 httpRoute:
   enabled: true

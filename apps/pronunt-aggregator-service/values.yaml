@@ -106,11 +106,13 @@ env:
     AGGREGATOR_STALE_AFTER_HOURS: "72"
     CONFIG_SERVICE_URL: http://pronunt-config-service:8000
     AI_SERVICE_URL: http://pronunt-ai-service:8000
+    AUTH_SERVICE_URL: http://pronunt-auth-service:8000
     AUTH_ENABLED: "false"
     ALLOW_UNSAFE_DEV_AUTH: "false"
   secret:
     MONGODB_URI: <set-mongodb-uri-via-sealed-secret>
     AGGREGATOR_SIGNING_KEY: change-me
+    INTERNAL_SERVICE_TOKEN: change-me
 
 httpRoute:
   enabled: true
