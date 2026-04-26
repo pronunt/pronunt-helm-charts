@@ -1,5 +1,5 @@
 image:
-  tag: d6728dc
+  tag: ad40fe6
 autoscaling:
   enabled: true
   minReplicas: 2
