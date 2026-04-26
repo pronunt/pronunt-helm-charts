@@ -1,5 +1,5 @@
 image:
-  tag: f62472c
+  tag: 3d2b873
 autoscaling:
   enabled: true
   minReplicas: 2
