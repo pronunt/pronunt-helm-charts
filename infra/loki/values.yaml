@@ -73,6 +73,13 @@ loki:
 
   monitoring:
     enabled: false
+    selfMonitoring:
+      enabled: false
+      grafanaAgent:
+        installOperator: false
+
+  grafanaAgent:
+    enabled: false
 
   test:
     enabled: false
