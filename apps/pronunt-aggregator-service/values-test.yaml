@@ -1,5 +1,5 @@
 image:
-  tag: 87aa278
+  tag: 98cede4
 env:
   config:
     APP_ENV: test
