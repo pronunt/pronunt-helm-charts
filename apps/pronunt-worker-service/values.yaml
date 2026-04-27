@@ -101,7 +101,7 @@ env:
     LOG_USE_COLORS: "true"
     REQUEST_ID_HEADER: X-Request-ID
     HTTP_TIMEOUT_SECONDS: "10"
-    RABBITMQ_URL: <set-rabbitmq-uri>
+    RABBITMQ_URL: amqp://pronuntuser:pronuntpassword@pronunt-rabbitmq:5672/
     RABBITMQ_EXCHANGE: pronunt.events
     RABBITMQ_PR_ROUTING_KEY: pull_request.normalized
     RABBITMQ_PR_QUEUE: pronunt.pull_requests.normalized
