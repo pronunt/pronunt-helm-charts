@@ -9,12 +9,19 @@ resources:
     memory: 512Mi
 autoscaling:
   enabled: true
-  minReplicas: 2
-  maxReplicas: 4
+  minReplicas: 1
+  maxReplicas: 2
   targetCPUUtilizationPercentage: 70
 env:
   config:
     APP_ENV: production
+    WORKER_CONSUMER_ENABLED: "false"
+
+tolerations:
+  - key: gpu
+    operator: Equal
+    value: "true"
+    effect: NoSchedule
 namespace:
   name: pronunt-app-ns
 httpRoute:
