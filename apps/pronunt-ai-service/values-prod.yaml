@@ -1,15 +1,12 @@
 image:
-  tag: prod
-
+  tag: v1.0.0
 nodeSelector:
   accelerator: nvidia
-
 tolerations:
   - key: gpu
     operator: Equal
     value: "true"
     effect: NoSchedule
-
 resources:
   requests:
     cpu: 500m
@@ -17,21 +14,16 @@ resources:
   limits:
     cpu: 1000m
     memory: 1Gi
-
 autoscaling:
   enabled: true
   minReplicas: 1
   maxReplicas: 4
   targetCPUUtilizationPercentage: 70
-
-
 namespace:
   name: pronunt-app-ns
-
 env:
   config:
     INHOUSE_BASE_URL: http://pronunt-ollama.pronunt-ai-infra-ns.svc.cluster.local:11434
-
 httpRoute:
   enabled: true
   hostnames:
@@ -40,4 +32,3 @@ httpRoute:
     - name: pronunt-gateway
       namespace: pronunt-gateway-ns
   pathPrefix: /api/v1/ai
-
