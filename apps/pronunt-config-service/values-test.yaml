@@ -8,7 +8,7 @@ namespace:
 httpRoute:
   enabled: true
   hostnames:
-    - pronunt.com
+    - test.pronunt.com
   parentRefs:
     - name: pronunt-gateway-test
       namespace: pronunt-gateway-test-ns

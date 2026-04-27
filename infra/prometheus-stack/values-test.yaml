@@ -15,4 +15,4 @@ httpRoute:
   gateway:
     name: pronunt-gateway-test
     namespace: pronunt-gateway-test-ns
-  hostname: grafana.pronunt.com
+  hostname: test-grafana.pronunt.com
