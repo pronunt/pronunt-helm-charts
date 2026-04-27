@@ -1,5 +1,5 @@
 image:
-  tag: 8950a60
+  tag: 8f971db
 autoscaling:
   enabled: true
   minReplicas: 2
