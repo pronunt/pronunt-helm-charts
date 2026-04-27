@@ -11,9 +11,15 @@ resources:
 
 autoscaling:
   enabled: true
-  minReplicas: 2
-  maxReplicas: 6
+  minReplicas: 1
+  maxReplicas: 2
   targetCPUUtilizationPercentage: 70
+
+tolerations:
+  - key: gpu
+    operator: Equal
+    value: "true"
+    effect: NoSchedule
 
 env:
   config:

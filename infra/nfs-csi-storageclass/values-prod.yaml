@@ -1,5 +1,5 @@
 storageClass:
-  name: pronunt-nfs-csi
+  name: pronunt-nfs-csi-prod
   parameters:
     server: 172.31.1.208
     share: /pronunt/prod

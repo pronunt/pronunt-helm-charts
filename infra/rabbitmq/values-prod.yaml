@@ -1,2 +1,19 @@
 namespace:
   name: pronunt-app-ns
+
+persistence:
+  storageClassName: pronunt-nfs-csi-prod
+
+resources:
+  requests:
+    cpu: 100m
+    memory: 256Mi
+  limits:
+    cpu: 500m
+    memory: 768Mi
+
+tolerations:
+  - key: gpu
+    operator: Equal
+    value: "true"
+    effect: NoSchedule
