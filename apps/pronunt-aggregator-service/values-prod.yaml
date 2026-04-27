@@ -1,6 +1,5 @@
 image:
-  tag: prod
-
+  tag: v1.0.0
 resources:
   requests:
     cpu: 250m
@@ -8,21 +7,16 @@ resources:
   limits:
     cpu: 500m
     memory: 512Mi
-
 autoscaling:
   enabled: true
   minReplicas: 2
   maxReplicas: 6
   targetCPUUtilizationPercentage: 70
-
 env:
   config:
     APP_ENV: production
-
-
 namespace:
   name: pronunt-app-ns
-
 httpRoute:
   enabled: true
   hostnames:
@@ -31,4 +25,3 @@ httpRoute:
     - name: pronunt-gateway
       namespace: pronunt-gateway-ns
   pathPrefix: /api/v1/aggregator
-
