@@ -111,10 +111,19 @@ jobs:
           set -euo pipefail
           version="v1.13.4"
           tmp_dir="$(mktemp -d)"
-          curl -fsSL "https://github.com/kyverno/kyverno/releases/download/${version}/kyverno-cli_${version#v}_linux_x86_64.tar.gz" -o "${tmp_dir}/kyverno.tar.gz"
+          curl -fsSL "https://github.com/kyverno/kyverno/releases/download/${version}/kyverno-cli_${version}_linux_x86_64.tar.gz" -o "${tmp_dir}/kyverno.tar.gz"
           tar -xzf "${tmp_dir}/kyverno.tar.gz" -C "${tmp_dir}"
           sudo install -m 0755 "${tmp_dir}/kyverno" /usr/local/bin/kyverno
           kyverno version
+
+      - name: Add Helm repositories
+        shell: bash
+        run: |
+          set -euo pipefail
+          helm repo add bitnami https://charts.bitnami.com/bitnami
+          helm repo add grafana https://grafana.github.io/helm-charts
+          helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
+          helm repo update
 
       - name: Build dependencies
         shell: bash
