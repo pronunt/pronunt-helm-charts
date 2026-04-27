@@ -101,3 +101,4 @@ httpRoute:
     - name: pronunt-gateway
       namespace: pronunt-gateway-ns
   pathPrefix: /
+
