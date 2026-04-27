@@ -275,6 +275,7 @@ data:
               "refId": "Loki-service"
             },
             "refresh": 2,
+            "sort": 1,
             "type": "query"
           },
           {
@@ -297,6 +298,7 @@ data:
               "refId": "Loki-pod"
             },
             "refresh": 2,
+            "sort": 1,
             "type": "query"
           },
           {
@@ -319,6 +321,7 @@ data:
               "refId": "Loki-container"
             },
             "refresh": 2,
+            "sort": 1,
             "type": "query"
           }
         ]
