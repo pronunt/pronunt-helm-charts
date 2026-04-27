@@ -23,10 +23,6 @@ namespaces:
     name: pronunt-monitoring-ns
     labels:
       pronunt-gateway: "true"
-  monitoringTest:
-    name: pronunt-monitoring-test-ns
-    labels:
-      pronunt-gateway: "true"
 
 gateway:
   name: pronunt-gateway
