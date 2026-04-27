@@ -1,5 +1,5 @@
 image:
-  tag: 86968ff
+  tag: cccbbc9
 nodeSelector:
   accelerator: nvidia
 tolerations:
