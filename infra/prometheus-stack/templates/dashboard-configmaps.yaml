@@ -230,10 +230,10 @@ data:
           {
             "current": {
               "selected": true,
-              "text": "pronunt-app-test-ns",
-              "value": "pronunt-app-test-ns"
+              "text": "pronunt-app-ns",
+              "value": "pronunt-app-ns"
             },
-            "definition": "pronunt-app-test-ns,pronunt-ai-infra-test-ns,pronunt-monitoring-test-ns,kube-system,argocd-ns",
+            "definition": "pronunt-app-ns,pronunt-app-test-ns,pronunt-ai-infra-ns,pronunt-ai-infra-test-ns,pronunt-monitoring-ns,pronunt-monitoring-test-ns,kube-system,argocd-ns",
             "hide": 0,
             "includeAll": false,
             "label": "Namespace",
@@ -242,13 +242,28 @@ data:
             "options": [
               {
                 "selected": true,
+                "text": "pronunt-app-ns",
+                "value": "pronunt-app-ns"
+              },
+              {
+                "selected": false,
                 "text": "pronunt-app-test-ns",
                 "value": "pronunt-app-test-ns"
               },
               {
                 "selected": false,
+                "text": "pronunt-ai-infra-ns",
+                "value": "pronunt-ai-infra-ns"
+              },
+              {
+                "selected": false,
                 "text": "pronunt-ai-infra-test-ns",
                 "value": "pronunt-ai-infra-test-ns"
+              },
+              {
+                "selected": false,
+                "text": "pronunt-monitoring-ns",
+                "value": "pronunt-monitoring-ns"
               },
               {
                 "selected": false,
@@ -266,7 +281,7 @@ data:
                 "value": "argocd-ns"
               }
             ],
-            "query": "pronunt-app-test-ns,pronunt-ai-infra-test-ns,pronunt-monitoring-test-ns,kube-system,argocd-ns",
+            "query": "pronunt-app-ns,pronunt-app-test-ns,pronunt-ai-infra-ns,pronunt-ai-infra-test-ns,pronunt-monitoring-ns,pronunt-monitoring-test-ns,kube-system,argocd-ns",
             "type": "custom"
           },
           {
