@@ -88,7 +88,7 @@ livenessProbe:
 env:
   config:
     NEXT_PUBLIC_AGGREGATOR_API_URL: http://pronunt-aggregator-service:8000
-    NEXT_PUBLIC_APP_NAME: PRISM
+    NEXT_PUBLIC_APP_NAME: Pronunt
     NEXT_TELEMETRY_DISABLED: "1"
   secret:
     FRONTEND_SESSION_SECRET: change-me
