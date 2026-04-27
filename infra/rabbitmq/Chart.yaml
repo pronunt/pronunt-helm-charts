@@ -1,0 +1,6 @@
+apiVersion: v2
+name: pronunt-rabbitmq
+description: RabbitMQ StatefulSet for Pronunt
+type: application
+version: 0.1.0
+appVersion: "3.13"

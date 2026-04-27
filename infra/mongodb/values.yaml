@@ -1,0 +1,88 @@
+fullnameOverride: pronunt-mongodb
+
+namespace:
+  name: pronunt-app-ns
+
+image:
+  repository: mongo
+  tag: "7.0"
+  pullPolicy: IfNotPresent
+
+serviceAccount:
+  create: true
+  name: ""
+  automountServiceAccountToken: false
+
+secretTemplate:
+  enabled: false
+
+service:
+  port: 27017
+  targetPort: 27017
+
+auth:
+  rootUsername: <set-root-username-via-sealed-secret>
+  rootPassword: <set-root-password-via-sealed-secret>
+  username: <set-app-username-via-sealed-secret>
+  password: <set-app-password-via-sealed-secret>
+  database: <set-app-database-name>
+
+persistence:
+  enabled: true
+  size: 20Gi
+  accessModes:
+    - ReadWriteMany
+  storageClassName: pronunt-nfs-csi
+
+podSecurityContext:
+  fsGroup: 999
+  seccompProfile:
+    type: RuntimeDefault
+
+securityContext:
+  allowPrivilegeEscalation: false
+  capabilities:
+    drop:
+      - ALL
+  runAsNonRoot: true
+  runAsUser: 999
+  runAsGroup: 999
+  readOnlyRootFilesystem: false
+
+nodeSelector: {}
+tolerations: []
+affinity:
+  podAntiAffinity:
+    preferredDuringSchedulingIgnoredDuringExecution:
+      - weight: 100
+        podAffinityTerm:
+          topologyKey: kubernetes.io/hostname
+          labelSelector:
+            matchExpressions:
+              - key: app
+                operator: In
+                values:
+                  - pronunt-mongodb
+
+resources:
+  requests:
+    cpu: 250m
+    memory: 512Mi
+  limits:
+    cpu: 1000m
+    memory: 1Gi
+
+livenessProbe:
+  tcpSocket:
+    port: 27017
+  initialDelaySeconds: 30
+  periodSeconds: 20
+
+readinessProbe:
+  exec:
+    command:
+      - /bin/sh
+      - -c
+      - mongosh --quiet --username "$MONGO_APP_USERNAME" --password "$MONGO_APP_PASSWORD" --authenticationDatabase "$MONGO_APP_DATABASE" --eval "db.adminCommand('ping').ok"
+  initialDelaySeconds: 10
+  periodSeconds: 10

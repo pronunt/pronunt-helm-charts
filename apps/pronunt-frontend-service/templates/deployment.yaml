@@ -4,7 +4,7 @@ metadata:
   name: {{ .Values.fullnameOverride }}
   namespace: {{ .Values.namespace.name }}
 spec:
-  replicas: {{ if .Values.autoscaling.enabled }}{{ .Values.autoscaling.minReplicas }}{{ else }}1{{ end }}
+  replicas: {{ if .Values.autoscaling.enabled }}{{ .Values.autoscaling.minReplicas }}{{ else }}{{ .Values.replicaCount }}{{ end }}
   selector:
     matchLabels:
       app: {{ .Values.fullnameOverride }}
@@ -12,11 +12,44 @@ spec:
     metadata:
       labels:
         app: {{ .Values.fullnameOverride }}
+{{- with .Values.podLabels }}
+{{ toYaml . | indent 8 }}
+{{- end }}
+{{- with .Values.podAnnotations }}
+      annotations:
+{{ toYaml . | indent 8 }}
+{{- end }}
     spec:
+      serviceAccountName: {{ if .Values.serviceAccount.name }}{{ .Values.serviceAccount.name }}{{ else }}{{ .Values.fullnameOverride }}{{ end }}
+      automountServiceAccountToken: {{ .Values.serviceAccount.automountServiceAccountToken }}
+{{- with .Values.podSecurityContext }}
+      securityContext:
+{{ toYaml . | indent 8 }}
+{{- end }}
+{{- with .Values.nodeSelector }}
+      nodeSelector:
+{{ toYaml . | indent 8 }}
+{{- end }}
+{{- with .Values.tolerations }}
+      tolerations:
+{{ toYaml . | indent 8 }}
+{{- end }}
+{{- with .Values.affinity }}
+      affinity:
+{{ toYaml . | indent 8 }}
+{{- end }}
       containers:
         - name: {{ .Values.fullnameOverride }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
+{{- with .Values.command }}
+          command:
+{{ toYaml . | indent 12 }}
+{{- end }}
+{{- with .Values.args }}
+          args:
+{{ toYaml . | indent 12 }}
+{{- end }}
           ports:
             - containerPort: {{ .Values.containerPort }}
           envFrom:
@@ -24,18 +57,21 @@ spec:
                 name: {{ .Values.fullnameOverride }}-config
             - secretRef:
                 name: {{ .Values.fullnameOverride }}-secret
+{{- with .Values.securityContext }}
+          securityContext:
+{{ toYaml . | indent 12 }}
+{{- end }}
+{{- with .Values.startupProbe }}
+          startupProbe:
+{{ toYaml . | indent 12 }}
+{{- end }}
+{{- with .Values.readinessProbe }}
           readinessProbe:
-            httpGet:
-              path: /
-              port: {{ .Values.containerPort }}
-            initialDelaySeconds: 5
-            periodSeconds: 10
+{{ toYaml . | indent 12 }}
+{{- end }}
+{{- with .Values.livenessProbe }}
           livenessProbe:
-            httpGet:
-              path: /
-              port: {{ .Values.containerPort }}
-            initialDelaySeconds: 15
-            periodSeconds: 20
+{{ toYaml . | indent 12 }}
+{{- end }}
           resources:
 {{ toYaml .Values.resources | indent 12 }}
-

@@ -1,5 +1,7 @@
 fullnameOverride: pronunt-auth-service
 
+replicaCount: 1
+
 namespace:
   create: false
   name: pronunt-app-ns
@@ -11,36 +13,83 @@ image:
 
 containerPort: 8000
 
+serviceAccount:
+  create: true
+  name: ""
+  automountServiceAccountToken: false
+
+secretTemplate:
+  enabled: false
+
 service:
   enabled: true
   type: ClusterIP
   port: 8000
   targetPort: 8000
 
-ingress:
-  enabled: false
-  className: ""
-  annotations: {}
-  hosts:
-    - host: pronunt-auth-service.local
-      paths:
-        - path: /
-          pathType: Prefix
-  tls: []
-
 resources:
   requests:
-    cpu: 100m
-    memory: 128Mi
-  limits:
-    cpu: 300m
+    cpu: 200m
     memory: 256Mi
+  limits:
+    cpu: 500m
+    memory: 512Mi
 
 autoscaling:
   enabled: false
   minReplicas: 1
   maxReplicas: 3
   targetCPUUtilizationPercentage: 80
+  targetMemoryUtilizationPercentage: 80
+
+podAnnotations: {}
+podLabels: {}
+podSecurityContext:
+  runAsNonRoot: true
+  runAsUser: 10001
+  runAsGroup: 10001
+  fsGroup: 10001
+  seccompProfile:
+    type: RuntimeDefault
+securityContext:
+  allowPrivilegeEscalation: false
+  capabilities:
+    drop:
+      - ALL
+  readOnlyRootFilesystem: false
+nodeSelector: {}
+tolerations: []
+affinity:
+  podAntiAffinity:
+    preferredDuringSchedulingIgnoredDuringExecution:
+      - weight: 100
+        podAffinityTerm:
+          topologyKey: kubernetes.io/hostname
+          labelSelector:
+            matchExpressions:
+              - key: app
+                operator: In
+                values:
+                  - pronunt-auth-service
+
+startupProbe:
+  httpGet:
+    path: /api/v1/health/live
+    port: 8000
+  failureThreshold: 30
+  periodSeconds: 10
+readinessProbe:
+  httpGet:
+    path: /api/v1/health/ready
+    port: 8000
+  initialDelaySeconds: 5
+  periodSeconds: 10
+livenessProbe:
+  httpGet:
+    path: /api/v1/health/live
+    port: 8000
+  initialDelaySeconds: 15
+  periodSeconds: 20
 
 env:
   config:
@@ -49,12 +98,29 @@ env:
     APP_HOST: 0.0.0.0
     APP_PORT: "8000"
     LOG_LEVEL: INFO
-    GITHUB_APP_ID: replace-me
-    GITHUB_INSTALLATION_ID: replace-me
-    GITHUB_PRIVATE_KEY_PATH: /run/secrets/github-app.pem
+    LOG_USE_COLORS: "false"
+    REQUEST_ID_HEADER: X-Request-ID
+    HTTP_TIMEOUT_SECONDS: "10"
+    MONGODB_DATABASE: pronunt
+    MONGODB_CONNECTION_COLLECTION: auth_github_connections
+    GITHUB_API_URL: https://api.github.com
+    GITHUB_OAUTH_AUTHORIZE_URL: https://github.com/login/oauth/authorize
+    GITHUB_OAUTH_ACCESS_TOKEN_URL: https://github.com/login/oauth/access_token
+    GITHUB_OAUTH_CLIENT_ID: replace-me
+    GITHUB_OAUTH_REDIRECT_URI: <set-public-auth-callback-uri>
+    GITHUB_OAUTH_SCOPES: read:user,user:email,repo,read:org
+    FRONTEND_AUTH_SUCCESS_URL: <set-public-frontend-success-url>
+    FRONTEND_AUTH_FAILURE_URL: <set-public-frontend-failure-url>
+    SESSION_JWT_ISSUER: pronunt-auth-service
+    SESSION_TTL_SECONDS: "604800"
+    AUTH_ENABLED: "false"
+    ALLOW_UNSAFE_DEV_AUTH: "false"
   secret:
+    MONGODB_URI: <set-mongodb-uri-via-sealed-secret>
+    GITHUB_OAUTH_CLIENT_SECRET: change-me
+    SESSION_JWT_SECRET: change-me
+    INTERNAL_SERVICE_TOKEN: change-me
     GITHUB_PRIVATE_KEY: change-me
-
 
 httpRoute:
   enabled: true

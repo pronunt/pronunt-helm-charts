@@ -1,20 +1,16 @@
 image:
-  tag: test
-
+  tag: 5fdc3f0
 env:
   config:
     APP_ENV: test
-
-
+    RABBITMQ_URL: amqp://pronuntuser:pronuntpassword@pronunt-rabbitmq:5672/
 namespace:
   name: pronunt-app-test-ns
-
 httpRoute:
   enabled: true
   hostnames:
-    - pronunt.com
+    - test.pronunt.com
   parentRefs:
-    - name: pronunt-gateway
-      namespace: pronunt-gateway-ns
+    - name: pronunt-gateway-test
+      namespace: pronunt-gateway-test-ns
   pathPrefix: /api/v1/worker
-

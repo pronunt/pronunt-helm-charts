@@ -1,0 +1,12 @@
+storageClass:
+  name: pronunt-nfs-csi
+  create: true
+  provisioner: nfs.csi.k8s.io
+  reclaimPolicy: Retain
+  volumeBindingMode: Immediate
+  allowVolumeExpansion: true
+  mountOptions:
+    - nconnect=4
+  parameters:
+    server: replace-me
+    share: /exports/pronunt

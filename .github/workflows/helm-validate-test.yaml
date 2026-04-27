@@ -1,0 +1,152 @@
+name: Helm Validate Test Push
+
+on:
+  push:
+    branches:
+      - test
+    paths:
+      - "apps/**"
+      - "env/**"
+      - "infra/**"
+      - ".github/workflows/helm-validate-test.yaml"
+  workflow_dispatch:
+
+concurrency:
+  group: helm-validate-test
+  cancel-in-progress: true
+
+jobs:
+  detect-changes:
+    name: Detect impacted charts
+    runs-on: ubuntu-latest
+    outputs:
+      charts: ${{ steps.detect.outputs.charts }}
+      charts_count: ${{ steps.detect.outputs.charts_count }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Detect changed charts
+        id: detect
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          before_sha="${{ github.event.before }}"
+
+          if [[ -z "${before_sha}" || "${before_sha}" == "0000000000000000000000000000000000000000" ]]; then
+            changed_files="$(git ls-files apps env infra)"
+          else
+            changed_files="$(git diff --name-only "${before_sha}...HEAD")"
+          fi
+
+          echo "Changed files:"
+          printf '%s\n' "${changed_files}"
+
+          env_changed=false
+          workflow_changed=false
+          declare -A charts=()
+
+          while IFS= read -r file; do
+            [[ -z "${file}" ]] && continue
+
+            if [[ "${file}" == env/* ]]; then
+              env_changed=true
+            fi
+
+            if [[ "${file}" == ".github/workflows/helm-validate-test.yaml" ]]; then
+              workflow_changed=true
+            fi
+
+            if [[ "${file}" == apps/*/* || "${file}" == infra/*/* ]]; then
+              chart_dir="$(cut -d/ -f1-2 <<< "${file}")"
+              if [[ -f "${chart_dir}/Chart.yaml" ]]; then
+                charts["${chart_dir}"]=1
+              fi
+            fi
+          done <<< "${changed_files}"
+
+          if [[ "${env_changed}" == true || "${workflow_changed}" == true ]]; then
+            while IFS= read -r chart_yaml; do
+              chart_dir="$(dirname "${chart_yaml}")"
+              charts["${chart_dir}"]=1
+            done < <(find apps infra -mindepth 2 -maxdepth 2 -name Chart.yaml | sort)
+          fi
+
+          if [[ "${#charts[@]}" -eq 0 ]]; then
+            charts_json='[]'
+            charts_count=0
+          else
+            mapfile -t sorted_charts < <(printf '%s\n' "${!charts[@]}" | sort)
+            charts_json="$(printf '%s\n' "${sorted_charts[@]}" | jq -R . | jq -s -c .)"
+            charts_count="${#sorted_charts[@]}"
+          fi
+
+          echo "charts=${charts_json}" >> "${GITHUB_OUTPUT}"
+          echo "charts_count=${charts_count}" >> "${GITHUB_OUTPUT}"
+
+  validate:
+    name: Helm lint and render
+    needs: detect-changes
+    if: ${{ needs.detect-changes.outputs.charts_count != '0' }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        chart: ${{ fromJson(needs.detect-changes.outputs.charts) }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Helm
+        uses: azure/setup-helm@v4
+        with:
+          version: v3.16.2
+
+      - name: Build dependencies
+        shell: bash
+        run: |
+          set -euo pipefail
+          helm dependency build "${{ matrix.chart }}"
+
+      - name: Helm lint
+        shell: bash
+        run: |
+          set -euo pipefail
+          chart="${{ matrix.chart }}"
+          helm lint "${chart}" -f "${chart}/values.yaml" -f "${chart}/values-test.yaml"
+
+      - name: Render chart
+        id: chart-meta
+        shell: bash
+        run: |
+          set -euo pipefail
+          chart="${{ matrix.chart }}"
+          chart_name="$(basename "${chart}")"
+          chart_slug="${chart//\//-}"
+          echo "chart_name=${chart_name}" >> "${GITHUB_OUTPUT}"
+          echo "chart_slug=${chart_slug}" >> "${GITHUB_OUTPUT}"
+          mkdir -p rendered
+          helm template "${chart_name}" "${chart}" \
+            -f "${chart}/values.yaml" \
+            -f "${chart}/values-test.yaml" \
+            > "rendered/${chart_name}.yaml"
+
+      - name: Upload rendered manifests
+        uses: actions/upload-artifact@v4
+        with:
+          name: rendered-test-${{ steps.chart-meta.outputs.chart_slug }}
+          path: rendered/
+
+  no-op:
+    name: No impacted charts
+    needs: detect-changes
+    if: ${{ needs.detect-changes.outputs.charts_count == '0' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Summary
+        shell: bash
+        run: |
+          echo "No Helm chart changes detected on test push. Skipping lint/render validation." >> "${GITHUB_STEP_SUMMARY}"

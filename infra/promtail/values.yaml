@@ -1,0 +1,50 @@
+promtail:
+  config:
+    enabled: true
+    logLevel: info
+    serverPort: 3101
+    clients:
+      - url: http://pronunt-loki:3100/loki/api/v1/push
+    positions:
+      filename: /run/promtail/positions.yaml
+    snippets:
+      extraRelabelConfigs:
+        - action: replace
+          replacement: pronunt
+          target_label: platform
+        - action: replace
+          replacement: pronunt
+          target_label: environment
+        - action: replace
+          regex: (.+)
+          source_labels:
+            - __meta_kubernetes_pod_label_app_kubernetes_io_name
+          target_label: service
+        - action: replace
+          regex: (.+)
+          source_labels:
+            - __meta_kubernetes_pod_label_app_kubernetes_io_instance
+          target_label: service
+        - action: replace
+          regex: ^(.+)-[a-f0-9]{9,10}-[a-z0-9]{5}$
+          replacement: $1
+          source_labels:
+            - __meta_kubernetes_pod_name
+          target_label: deployment
+        - action: replace
+          regex: ^(.+)-[0-9]+$
+          replacement: $1
+          source_labels:
+            - __meta_kubernetes_pod_name
+          target_label: deployment
+        - action: replace
+          regex: (.+)
+          source_labels:
+            - app
+          target_label: service
+
+  serviceMonitor:
+    enabled: true
+
+  tolerations:
+    - operator: Exists

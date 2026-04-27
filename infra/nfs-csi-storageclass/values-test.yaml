@@ -1,0 +1,5 @@
+storageClass:
+  name: pronunt-nfs-csi
+  parameters:
+    server: 172.31.1.208
+    share: /pronunt/test

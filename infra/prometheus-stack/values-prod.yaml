@@ -1,0 +1,18 @@
+kube-prometheus-stack:
+  grafana:
+    additionalDataSources:
+      - name: Loki
+        type: loki
+        access: proxy
+        url: http://pronunt-loki.pronunt-monitoring-ns.svc.cluster.local:3100
+        isDefault: false
+        jsonData:
+          maxLines: 1000
+          timeout: 60
+        editable: true
+
+httpRoute:
+  gateway:
+    name: pronunt-gateway
+    namespace: pronunt-gateway-ns
+  hostname: grafana.pronunt.com

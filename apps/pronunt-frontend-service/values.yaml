@@ -1,5 +1,7 @@
 fullnameOverride: pronunt-frontend-service
 
+replicaCount: 2
+
 namespace:
   create: false
   name: pronunt-app-ns
@@ -11,36 +13,77 @@ image:
 
 containerPort: 3000
 
+serviceAccount:
+  create: true
+  name: ""
+  automountServiceAccountToken: false
+
+secretTemplate:
+  enabled: false
+
 service:
   enabled: true
   type: ClusterIP
   port: 3000
   targetPort: 3000
 
-ingress:
-  enabled: false
-  className: ""
-  annotations: {}
-  hosts:
-    - host: prism.local
-      paths:
-        - path: /
-          pathType: Prefix
-  tls: []
-
 resources:
   requests:
-    cpu: 100m
-    memory: 128Mi
-  limits:
     cpu: 250m
     memory: 256Mi
+  limits:
+    cpu: 600m
+    memory: 512Mi
 
 autoscaling:
   enabled: false
-  minReplicas: 1
-  maxReplicas: 3
-  targetCPUUtilizationPercentage: 80
+  minReplicas: 2
+  maxReplicas: 5
+  targetCPUUtilizationPercentage: 70
+  targetMemoryUtilizationPercentage: 75
+
+podAnnotations: {}
+podLabels: {}
+podSecurityContext:
+  runAsNonRoot: true
+  runAsUser: 10001
+  runAsGroup: 10001
+  fsGroup: 10001
+  seccompProfile:
+    type: RuntimeDefault
+securityContext:
+  allowPrivilegeEscalation: false
+  capabilities:
+    drop:
+      - ALL
+  readOnlyRootFilesystem: false
+nodeSelector: {}
+tolerations: []
+affinity:
+  podAntiAffinity:
+    preferredDuringSchedulingIgnoredDuringExecution:
+      - weight: 100
+        podAffinityTerm:
+          topologyKey: kubernetes.io/hostname
+          labelSelector:
+            matchExpressions:
+              - key: app
+                operator: In
+                values:
+                  - pronunt-frontend-service
+
+readinessProbe:
+  httpGet:
+    path: /
+    port: 3000
+  initialDelaySeconds: 5
+  periodSeconds: 10
+livenessProbe:
+  httpGet:
+    path: /
+    port: 3000
+  initialDelaySeconds: 15
+  periodSeconds: 20
 
 env:
   config:
@@ -49,7 +92,6 @@ env:
     NEXT_TELEMETRY_DISABLED: "1"
   secret:
     FRONTEND_SESSION_SECRET: change-me
-
 
 httpRoute:
   enabled: true

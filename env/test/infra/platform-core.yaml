@@ -1,0 +1,24 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: pronunt-platform-core-test
+  namespace: argocd-ns
+spec:
+  project: pronunt
+  source:
+    repoURL: https://github.com/pronunt/pronunt-helm-charts.git
+    targetRevision: test
+    path: infra/platform-core
+    helm:
+      valueFiles:
+        - values.yaml
+        - values-test.yaml
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: argocd-ns
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=false

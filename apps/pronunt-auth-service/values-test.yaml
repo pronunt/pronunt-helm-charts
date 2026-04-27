@@ -1,20 +1,19 @@
 image:
-  tag: test
-
+  tag: b6b3f0d
 env:
   config:
     APP_ENV: test
-
-
+    GITHUB_OAUTH_CLIENT_ID: Ov23lil9XGjoKXXCTcXj
+    GITHUB_OAUTH_REDIRECT_URI: https://test.pronunt.com/api/v1/auth/github/callback
+    FRONTEND_AUTH_SUCCESS_URL: https://test.pronunt.com/connect
+    FRONTEND_AUTH_FAILURE_URL: https://test.pronunt.com/connect
 namespace:
   name: pronunt-app-test-ns
-
 httpRoute:
   enabled: true
   hostnames:
-    - pronunt.com
+    - test.pronunt.com
   parentRefs:
-    - name: pronunt-gateway
-      namespace: pronunt-gateway-ns
+    - name: pronunt-gateway-test
+      namespace: pronunt-gateway-test-ns
   pathPrefix: /api/v1/auth
-
