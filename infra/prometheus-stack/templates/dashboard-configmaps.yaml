@@ -219,20 +219,41 @@ data:
               "text": "pronunt-app-test-ns",
               "value": "pronunt-app-test-ns"
             },
-            "datasource": "Loki",
-            "definition": "label_values(namespace)",
+            "definition": "pronunt-app-test-ns,pronunt-ai-infra-test-ns,pronunt-monitoring-test-ns,kube-system,argocd-ns",
             "hide": 0,
-            "includeAll": true,
+            "includeAll": false,
             "label": "Namespace",
             "multi": false,
             "name": "namespace",
-            "options": [],
-            "query": {
-              "query": "label_values(namespace)",
-              "refId": "Loki-namespace"
-            },
-            "refresh": 2,
-            "type": "query"
+            "options": [
+              {
+                "selected": true,
+                "text": "pronunt-app-test-ns",
+                "value": "pronunt-app-test-ns"
+              },
+              {
+                "selected": false,
+                "text": "pronunt-ai-infra-test-ns",
+                "value": "pronunt-ai-infra-test-ns"
+              },
+              {
+                "selected": false,
+                "text": "pronunt-monitoring-test-ns",
+                "value": "pronunt-monitoring-test-ns"
+              },
+              {
+                "selected": false,
+                "text": "kube-system",
+                "value": "kube-system"
+              },
+              {
+                "selected": false,
+                "text": "argocd-ns",
+                "value": "argocd-ns"
+              }
+            ],
+            "query": "pronunt-app-test-ns,pronunt-ai-infra-test-ns,pronunt-monitoring-test-ns,kube-system,argocd-ns",
+            "type": "custom"
           },
           {
             "current": {
