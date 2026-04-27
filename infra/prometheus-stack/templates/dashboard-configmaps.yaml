@@ -256,6 +256,7 @@ data:
             "type": "custom"
           },
           {
+            "allValue": ".*",
             "current": {
               "selected": true,
               "text": "All",
@@ -277,6 +278,7 @@ data:
             "type": "query"
           },
           {
+            "allValue": ".*",
             "current": {
               "selected": true,
               "text": "All",
@@ -298,6 +300,7 @@ data:
             "type": "query"
           },
           {
+            "allValue": ".*",
             "current": {
               "selected": true,
               "text": "All",
