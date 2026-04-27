@@ -2,7 +2,7 @@ image:
   tag: v1.0.0
 resources:
   requests:
-    cpu: 200m
+    cpu: 100m
     memory: 256Mi
   limits:
     cpu: 500m
@@ -12,14 +12,6 @@ autoscaling:
   minReplicas: 1
   maxReplicas: 2
   targetCPUUtilizationPercentage: 70
-
-tolerations:
-  - key: gpu
-    operator: Equal
-    value: "true"
-    effect: NoSchedule
-
-
 namespace:
   name: pronunt-app-ns
 httpRoute:

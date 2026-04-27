@@ -12,8 +12,4 @@ resources:
     cpu: 500m
     memory: 768Mi
 
-tolerations:
-  - key: gpu
-    operator: Equal
-    value: "true"
-    effect: NoSchedule
+tolerations: []
