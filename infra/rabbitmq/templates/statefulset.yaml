@@ -32,6 +32,26 @@ spec:
       affinity:
 {{ toYaml . | indent 8 }}
 {{- end }}
+      initContainers:
+        - name: fix-cookie-permissions
+          image: busybox
+          securityContext:
+            runAsUser: 999
+            runAsGroup: 999
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+                - ALL
+          command:
+            - sh
+            - -c
+            - |
+              if [ -f /var/lib/rabbitmq/.erlang.cookie ]; then
+                chmod 400 /var/lib/rabbitmq/.erlang.cookie
+              fi
+          volumeMounts:
+            - name: rabbitmq-data
+              mountPath: /var/lib/rabbitmq
       containers:
         - name: {{ .Values.fullnameOverride }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
