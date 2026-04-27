@@ -86,3 +86,4 @@ readinessProbe:
       - mongosh --quiet --username "$MONGO_APP_USERNAME" --password "$MONGO_APP_PASSWORD" --authenticationDatabase "$MONGO_APP_DATABASE" --eval "db.adminCommand('ping').ok"
   initialDelaySeconds: 10
   periodSeconds: 10
+  timeoutSeconds: 10
