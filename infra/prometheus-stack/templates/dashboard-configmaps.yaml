@@ -18,7 +18,7 @@ data:
       "links": [],
       "panels": [
         {
-          "datasource": "Loki",
+          "datasource": "$logs",
           "fieldConfig": {
             "defaults": {
               "color": {
@@ -51,7 +51,7 @@ data:
           "targets": [
             {
               "editorMode": "code",
-              "expr": "sum(count_over_time({namespace=~\"$namespace\",service=~\"$service\",pod=~\"$pod\",container=~\"$container\"}[5m]))",
+              "expr": "sum(count_over_time({namespace=~\"$namespace\",service=~\"$service\",pod=~\"$pod\",container=~\"$container\"} |~ \"(?i)$level\" [5m]))",
               "queryType": "instant",
               "refId": "A"
             }
@@ -60,7 +60,7 @@ data:
           "type": "stat"
         },
         {
-          "datasource": "Loki",
+          "datasource": "$logs",
           "fieldConfig": {
             "defaults": {
               "color": {
@@ -93,7 +93,7 @@ data:
           "targets": [
             {
               "editorMode": "code",
-              "expr": "count(count_over_time({namespace=~\"$namespace\",service=~\"$service\",pod=~\"$pod\",container=~\"$container\"}[5m]))",
+              "expr": "count(count_over_time({namespace=~\"$namespace\",service=~\"$service\",pod=~\"$pod\",container=~\"$container\"} |~ \"(?i)$level\" [5m]))",
               "queryType": "instant",
               "refId": "A"
             }
@@ -102,7 +102,7 @@ data:
           "type": "stat"
         },
         {
-          "datasource": "Loki",
+          "datasource": "$logs",
           "fieldConfig": {
             "defaults": {
               "color": {
@@ -135,7 +135,7 @@ data:
           "targets": [
             {
               "editorMode": "code",
-              "expr": "sum(count_over_time({namespace=~\"$namespace\",service=~\"$service\",pod=~\"$pod\",container=~\"$container\"} |= \"error\" [15m]))",
+              "expr": "sum(count_over_time({namespace=~\"$namespace\",service=~\"$service\",pod=~\"$pod\",container=~\"$container\"} |~ \"(?i)(error|exception|fatal|panic)\" [15m]))",
               "queryType": "instant",
               "refId": "A"
             }
@@ -144,7 +144,7 @@ data:
           "type": "stat"
         },
         {
-          "datasource": "Loki",
+          "datasource": "$logs",
           "gridPos": {
             "h": 5,
             "w": 6,
@@ -164,7 +164,7 @@ data:
           "targets": [
             {
               "editorMode": "code",
-              "expr": "sum by (service) (count_over_time({namespace=~\"$namespace\",service=~\"$service\"}[5m]))",
+              "expr": "sum by (service) (count_over_time({namespace=~\"$namespace\",service=~\"$service\",pod=~\"$pod\",container=~\"$container\"} |~ \"(?i)$level\" [5m]))",
               "legendFormat": "{{ `{{service}}` }}",
               "queryType": "range",
               "refId": "A"
@@ -174,7 +174,7 @@ data:
           "type": "timeseries"
         },
         {
-          "datasource": "Loki",
+          "datasource": "$logs",
           "gridPos": {
             "h": 18,
             "w": 24,
@@ -195,7 +195,7 @@ data:
           "targets": [
             {
               "editorMode": "code",
-              "expr": "{namespace=~\"$namespace\",service=~\"$service\",pod=~\"$pod\",container=~\"$container\"}",
+              "expr": "{namespace=~\"$namespace\",service=~\"$service\",pod=~\"$pod\",container=~\"$container\"} |~ \"(?i)$level\"",
               "queryType": "range",
               "refId": "A"
             }
@@ -213,6 +213,20 @@ data:
       ],
       "templating": {
         "list": [
+          {
+            "current": {
+              "text": "Loki",
+              "value": "Loki"
+            },
+            "hide": 2,
+            "label": "Logs",
+            "name": "logs",
+            "options": [],
+            "query": "loki",
+            "refresh": 1,
+            "regex": "",
+            "type": "datasource"
+          },
           {
             "current": {
               "selected": true,
@@ -262,7 +276,49 @@ data:
               "text": "All",
               "value": ".*"
             },
-            "datasource": "Loki",
+            "hide": 0,
+            "includeAll": true,
+            "label": "Level",
+            "multi": false,
+            "name": "level",
+            "options": [
+              {
+                "selected": true,
+                "text": "All",
+                "value": ".*"
+              },
+              {
+                "selected": false,
+                "text": "info",
+                "value": "info"
+              },
+              {
+                "selected": false,
+                "text": "warn",
+                "value": "warn"
+              },
+              {
+                "selected": false,
+                "text": "error",
+                "value": "error"
+              },
+              {
+                "selected": false,
+                "text": "debug",
+                "value": "debug"
+              }
+            ],
+            "query": ".*,info,warn,error,debug",
+            "type": "custom"
+          },
+          {
+            "allValue": ".*",
+            "current": {
+              "selected": true,
+              "text": "All",
+              "value": ".*"
+            },
+            "datasource": "$logs",
             "definition": "label_values({namespace=~\"$namespace\"}, service)",
             "hide": 0,
             "includeAll": true,
@@ -270,11 +326,8 @@ data:
             "multi": false,
             "name": "service",
             "options": [],
-            "query": {
-              "query": "label_values({namespace=~\"$namespace\"}, service)",
-              "refId": "Loki-service"
-            },
-            "refresh": 2,
+            "query": "label_values({namespace=~\"$namespace\"}, service)",
+            "refresh": 1,
             "sort": 1,
             "type": "query"
           },
@@ -285,7 +338,7 @@ data:
               "text": "All",
               "value": ".*"
             },
-            "datasource": "Loki",
+            "datasource": "$logs",
             "definition": "label_values({namespace=~\"$namespace\",service=~\"$service\"}, pod)",
             "hide": 0,
             "includeAll": true,
@@ -293,11 +346,8 @@ data:
             "multi": false,
             "name": "pod",
             "options": [],
-            "query": {
-              "query": "label_values({namespace=~\"$namespace\",service=~\"$service\"}, pod)",
-              "refId": "Loki-pod"
-            },
-            "refresh": 2,
+            "query": "label_values({namespace=~\"$namespace\",service=~\"$service\"}, pod)",
+            "refresh": 1,
             "sort": 1,
             "type": "query"
           },
@@ -308,7 +358,7 @@ data:
               "text": "All",
               "value": ".*"
             },
-            "datasource": "Loki",
+            "datasource": "$logs",
             "definition": "label_values({namespace=~\"$namespace\",service=~\"$service\",pod=~\"$pod\"}, container)",
             "hide": 0,
             "includeAll": true,
@@ -316,11 +366,8 @@ data:
             "multi": false,
             "name": "container",
             "options": [],
-            "query": {
-              "query": "label_values({namespace=~\"$namespace\",service=~\"$service\",pod=~\"$pod\"}, container)",
-              "refId": "Loki-container"
-            },
-            "refresh": 2,
+            "query": "label_values({namespace=~\"$namespace\",service=~\"$service\",pod=~\"$pod\"}, container)",
+            "refresh": 1,
             "sort": 1,
             "type": "query"
           }
