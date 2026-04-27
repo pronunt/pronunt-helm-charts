@@ -19,13 +19,169 @@ data:
       "panels": [
         {
           "datasource": "Loki",
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "continuous-GrYlRd"
+              }
+            },
+            "overrides": []
+          },
           "gridPos": {
-            "h": 18,
-            "w": 24,
+            "h": 5,
+            "w": 6,
             "x": 0,
             "y": 0
           },
           "id": 1,
+          "options": {
+            "colorMode": "background",
+            "graphMode": "none",
+            "justifyMode": "center",
+            "orientation": "auto",
+            "reduceOptions": {
+              "calcs": [
+                "lastNotNull"
+              ],
+              "fields": "",
+              "values": false
+            },
+            "textMode": "auto"
+          },
+          "targets": [
+            {
+              "editorMode": "code",
+              "expr": "sum(count_over_time({namespace=~\"$namespace\",service=~\"$service\",pod=~\"$pod\",container=~\"$container\"}[5m]))",
+              "queryType": "instant",
+              "refId": "A"
+            }
+          ],
+          "title": "Log lines in last 5m",
+          "type": "stat"
+        },
+        {
+          "datasource": "Loki",
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "continuous-BlPu"
+              }
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 5,
+            "w": 6,
+            "x": 6,
+            "y": 0
+          },
+          "id": 2,
+          "options": {
+            "colorMode": "background",
+            "graphMode": "none",
+            "justifyMode": "center",
+            "orientation": "auto",
+            "reduceOptions": {
+              "calcs": [
+                "lastNotNull"
+              ],
+              "fields": "",
+              "values": false
+            },
+            "textMode": "auto"
+          },
+          "targets": [
+            {
+              "editorMode": "code",
+              "expr": "count(count_over_time({namespace=~\"$namespace\",service=~\"$service\",pod=~\"$pod\",container=~\"$container\"}[5m]))",
+              "queryType": "instant",
+              "refId": "A"
+            }
+          ],
+          "title": "Active streams",
+          "type": "stat"
+        },
+        {
+          "datasource": "Loki",
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "continuous-RdYlGr"
+              }
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 5,
+            "w": 6,
+            "x": 12,
+            "y": 0
+          },
+          "id": 3,
+          "options": {
+            "colorMode": "background",
+            "graphMode": "none",
+            "justifyMode": "center",
+            "orientation": "auto",
+            "reduceOptions": {
+              "calcs": [
+                "lastNotNull"
+              ],
+              "fields": "",
+              "values": false
+            },
+            "textMode": "auto"
+          },
+          "targets": [
+            {
+              "editorMode": "code",
+              "expr": "sum(count_over_time({namespace=~\"$namespace\",service=~\"$service\",pod=~\"$pod\",container=~\"$container\"} |= \"error\" [15m]))",
+              "queryType": "instant",
+              "refId": "A"
+            }
+          ],
+          "title": "Error lines in last 15m",
+          "type": "stat"
+        },
+        {
+          "datasource": "Loki",
+          "gridPos": {
+            "h": 5,
+            "w": 6,
+            "x": 18,
+            "y": 0
+          },
+          "id": 4,
+          "options": {
+            "legend": {
+              "displayMode": "list",
+              "placement": "bottom"
+            },
+            "tooltip": {
+              "mode": "single"
+            }
+          },
+          "targets": [
+            {
+              "editorMode": "code",
+              "expr": "sum by (service) (count_over_time({namespace=~\"$namespace\",service=~\"$service\"}[5m]))",
+              "legendFormat": "{{ `{{service}}` }}",
+              "queryType": "range",
+              "refId": "A"
+            }
+          ],
+          "title": "Log rate by service",
+          "type": "timeseries"
+        },
+        {
+          "datasource": "Loki",
+          "gridPos": {
+            "h": 18,
+            "w": 24,
+            "x": 0,
+            "y": 5
+          },
+          "id": 5,
           "options": {
             "dedupStrategy": "none",
             "enableLogDetails": true,
@@ -39,7 +195,7 @@ data:
           "targets": [
             {
               "editorMode": "code",
-              "expr": "{namespace=~\"$namespace\",service=~\"$service\",pod=~\"$pod\"}",
+              "expr": "{namespace=~\"$namespace\",service=~\"$service\",pod=~\"$pod\",container=~\"$container\"}",
               "queryType": "range",
               "refId": "A"
             }
@@ -60,8 +216,8 @@ data:
           {
             "current": {
               "selected": true,
-              "text": "All",
-              "value": ".*"
+              "text": "pronunt-app-test-ns",
+              "value": "pronunt-app-test-ns"
             },
             "datasource": "Loki",
             "definition": "label_values(namespace)",
@@ -119,11 +275,32 @@ data:
             },
             "refresh": 2,
             "type": "query"
+          },
+          {
+            "current": {
+              "selected": true,
+              "text": "All",
+              "value": ".*"
+            },
+            "datasource": "Loki",
+            "definition": "label_values({namespace=~\"$namespace\",service=~\"$service\",pod=~\"$pod\"}, container)",
+            "hide": 0,
+            "includeAll": true,
+            "label": "Container",
+            "multi": false,
+            "name": "container",
+            "options": [],
+            "query": {
+              "query": "label_values({namespace=~\"$namespace\",service=~\"$service\",pod=~\"$pod\"}, container)",
+              "refId": "Loki-container"
+            },
+            "refresh": 2,
+            "type": "query"
           }
         ]
       },
       "time": {
-        "from": "now-30m",
+        "from": "now-1h",
         "to": "now"
       },
       "timezone": "",
