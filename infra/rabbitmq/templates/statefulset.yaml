@@ -46,9 +46,8 @@ spec:
             - sh
             - -c
             - |
-              if [ -f /var/lib/rabbitmq/.erlang.cookie ]; then
-                chmod 400 /var/lib/rabbitmq/.erlang.cookie
-              fi
+              dd if=/dev/urandom bs=1 count=20 2>/dev/null | base64 | tr -d '+/=' | head -c 20 > /var/lib/rabbitmq/.erlang.cookie
+              chmod 400 /var/lib/rabbitmq/.erlang.cookie
           volumeMounts:
             - name: rabbitmq-data
               mountPath: /var/lib/rabbitmq
