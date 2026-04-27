@@ -29,10 +29,10 @@ service:
 
 resources:
   requests:
-    cpu: 250m
+    cpu: 100m
     memory: 256Mi
   limits:
-    cpu: 600m
+    cpu: 500m
     memory: 512Mi
 
 autoscaling:
