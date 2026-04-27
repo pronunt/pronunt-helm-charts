@@ -1,4 +1,5 @@
 {{- if .Values.environment.includeProd }}
+---
 apiVersion: gateway.networking.k8s.io/v1
 kind: Gateway
 metadata:
@@ -9,10 +10,8 @@ spec:
   listeners:
 {{ toYaml .Values.gateway.listeners | indent 4 }}
 {{- end }}
-{{- if and .Values.environment.includeProd .Values.environment.includeTest }}
----
-{{- end }}
 {{- if .Values.environment.includeTest }}
+---
 apiVersion: gateway.networking.k8s.io/v1
 kind: Gateway
 metadata:

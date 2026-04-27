@@ -1,4 +1,5 @@
 {{- if .Values.environment.includeProd }}
+---
 apiVersion: v1
 kind: Namespace
 metadata:
@@ -6,10 +7,8 @@ metadata:
   labels:
 {{ toYaml .Values.namespaces.app.labels | indent 4 }}
 {{- end }}
-{{- if and .Values.environment.includeProd .Values.environment.includeTest }}
----
-{{- end }}
 {{- if .Values.environment.includeTest }}
+---
 apiVersion: v1
 kind: Namespace
 metadata:
@@ -17,10 +16,8 @@ metadata:
   labels:
 {{ toYaml .Values.namespaces.appTest.labels | indent 4 }}
 {{- end }}
-{{- if and .Values.environment.includeProd .Values.environment.includeTest }}
----
-{{- end }}
 {{- if .Values.environment.includeProd }}
+---
 apiVersion: v1
 kind: Namespace
 metadata:
@@ -30,10 +27,8 @@ metadata:
 {{ toYaml .Values.namespaces.gateway.labels | indent 4 }}
 {{- end }}
 {{- end }}
-{{- if and .Values.environment.includeProd .Values.environment.includeTest }}
----
-{{- end }}
 {{- if .Values.environment.includeTest }}
+---
 apiVersion: v1
 kind: Namespace
 metadata:
@@ -43,10 +38,8 @@ metadata:
 {{ toYaml .Values.namespaces.gatewayTest.labels | indent 4 }}
 {{- end }}
 {{- end }}
-{{- if and .Values.environment.includeProd .Values.environment.includeTest }}
----
-{{- end }}
 {{- if .Values.environment.includeProd }}
+---
 apiVersion: v1
 kind: Namespace
 metadata:
@@ -56,10 +49,8 @@ metadata:
 {{ toYaml .Values.namespaces.aiInfra.labels | indent 4 }}
 {{- end }}
 {{- end }}
-{{- if and .Values.environment.includeProd .Values.environment.includeTest }}
----
-{{- end }}
 {{- if .Values.environment.includeTest }}
+---
 apiVersion: v1
 kind: Namespace
 metadata:
