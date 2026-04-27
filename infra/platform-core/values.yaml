@@ -1,3 +1,7 @@
+environment:
+  includeProd: true
+  includeTest: true
+
 namespaces:
   app:
     name: pronunt-app-ns

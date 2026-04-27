@@ -1,2 +1,3 @@
-gateway:
-  namespace: pronunt-gateway-ns
+environment:
+  includeProd: false
+  includeTest: true
