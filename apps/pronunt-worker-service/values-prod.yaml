@@ -15,7 +15,7 @@ autoscaling:
 env:
   config:
     APP_ENV: production
-    WORKER_CONSUMER_ENABLED: "false"
+    WORKER_CONSUMER_ENABLED: "true"
 namespace:
   name: pronunt-app-ns
 httpRoute:
