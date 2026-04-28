@@ -12,6 +12,12 @@ autoscaling:
   minReplicas: 1
   maxReplicas: 2
   targetCPUUtilizationPercentage: 70
+env:
+  config:
+    GITHUB_OAUTH_CLIENT_ID: Ov23lil9XGjoKXXCTcXj
+    GITHUB_OAUTH_REDIRECT_URI: https://pronunt.com/api/v1/auth/github/callback
+    FRONTEND_AUTH_SUCCESS_URL: https://pronunt.com/connect
+    FRONTEND_AUTH_FAILURE_URL: https://pronunt.com/connect
 namespace:
   name: pronunt-app-ns
 httpRoute:

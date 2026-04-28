@@ -15,6 +15,7 @@ autoscaling:
 env:
   config:
     APP_ENV: production
+    RABBITMQ_URL: amqp://pronuntuser:pronuntpassword@pronunt-rabbitmq:5672/
 namespace:
   name: pronunt-app-ns
 httpRoute:
